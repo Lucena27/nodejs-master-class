@@ -31,7 +31,7 @@ app.get('/api/courses/:id', (req, res) => {
 
 //Adiciona um course
 app.post('/api/courses', (req, res) => {
-    const {error} = validadeCourse(req.body);
+    const {error} = validateCourse(req.body);
     if(error) return res.status(400).send(error.details[0].message)
     
     const course = {
@@ -48,7 +48,7 @@ app.put('/api/courses/:id', (req, res) => {
     const course = courses.find(c => c.id === parseInt(req.params.id));
     if (!course) return res.status(404).send('404 Course Not Found');
 
-    const {error} = validadeCourse(req.body);
+    const {error} = validateCourse(req.body);
     if(error) return res.status(400).send(error.details[0].message)
     
     course.name = req.body.name;
@@ -67,7 +67,7 @@ app.delete('/api/courses/:id', (req, res) => {
 })
 
 //Função validadora
-function validadeCourse(course){
+function validateCourse(course){
     const schema = {
         "name": Joi.string().min(3).required()
     };
