@@ -1,15 +1,28 @@
-const logger = require('./logger.js');
+const config = require('config');
+const morgan = require('morgan');
+const helmet = require('helmet');
 const Joi = require('joi');
-const auth = require('./auth');
+const logger = require('./logger.js');
 const express = require('express');
+const auth = require('./auth');
+
 const app = express();
 
-
 app.use(express.json()); // Midleware pro express usar json na pipeline
-
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static('public'));
+app.use(helmet());
+
+//Configuration
+
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail Server: ' + config.get('mail.host'));
+console.log('Mail Password: ' + config.get('mail.password'));
+
+if(app.get('env') === 'development'){
+    app.use(morgan('tiny'));
+    console.log("Morgan enabled...");
+}
 
 app.use(logger);
 
